@@ -1,3 +1,4 @@
+using chat.Domain.Interfaces;
 using System.ComponentModel.DataAnnotations;
 namespace chat.Domain.Entities;
 
@@ -12,4 +13,12 @@ public class AppUser<TKeyType> : IBaseEntity<TKeyType>
 
     [Required]
     public TKeyType AppId { get; set; }
+
+    public DateTimeOffset? CreatedDate { get; set; }
+    public TKeyType? CreatedBy { get; set; }
+    public DateTimeOffset? UpdatedDate { get; set; }
+    public TKeyType? UpdatedBy { get; set; }
+    public DateTimeOffset? DeletedDate { get; set; }
+    public TKeyType? DeletedBy { get; set; }
+    public bool SoftDeleted { get; set; } = false;
 }

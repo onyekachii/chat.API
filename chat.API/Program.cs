@@ -1,3 +1,7 @@
+using chat.API;
+using chat.API.Extensions;
+using Microsoft.AspNetCore.HttpOverrides;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
+// configure appsettings
+var variables = builder.Configuration.GetSection("Variables");
+builder.Services.Configure<Appsettings>(variables);
+// cors
+builder.Services.ConfigureCors(variables.Get<Appsettings>() ?? throw new InvalidOperationException());
 
 var app = builder.Build();
 
@@ -17,6 +26,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// useful for forwarding headers when behind a proxy like nginx
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.All
+});
+app.UseStaticFiles();
+app.UseCors(variables.Get<Appsettings>()?.CorsPolicyName ?? string.Empty);
+app.UseAuthorization();
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -36,7 +53,6 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast")
 .WithOpenApi();
-
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)

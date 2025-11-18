@@ -14,6 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\chat.Domain\chat.Domain.csproj" />
+    <ProjectReference Include="..\chat.Repo\chat.Repo.csproj" />
   </ItemGroup>
 </Project>

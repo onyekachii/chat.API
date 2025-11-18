@@ -1,6 +1,8 @@
 using chat.API;
 using chat.API.Extensions;
+using chat.Repo;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
 var aa = "Logging:LogLevel:Default";
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +17,10 @@ builder.Services.Configure<Appsettings>(variables);
 // cors
 builder.Services.ConfigureCors(variables.Get<Appsettings>() ?? throw new InvalidOperationException());
 
-builder.Services.ConfigureMySqlContext(builder.Configuration.GetConnectionString("sqlConnection") ?? throw new InvalidOperationException());
+var connString = builder.Configuration.GetConnectionString("sqlConnection") ?? throw new InvalidOperationException();
+builder.Services.AddDbContext<ChatContext>(o => o.UseMySql(connString, MySqlServerVersion.LatestSupportedServerVersion));
+
+builder.Services.AddSingleton<IRepoFactory, RepoFactory>();
 
 var app = builder.Build();
 

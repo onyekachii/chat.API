@@ -1,12 +1,12 @@
 namespace chat.Domain.Interfaces;
 
-interface IBaseEntity<T>
+public interface IBaseEntity
 {
     DateTimeOffset? CreatedDate { get; set; }
-    T? CreatedBy { get; set; }
+    Guid? CreatedBy { get; set; }
     DateTimeOffset? UpdatedDate { get; set;}
-    T? UpdatedBy { get; set; }
+    Guid? UpdatedBy { get; set; }
     DateTimeOffset? DeletedDate { get; set; }
-    T? DeletedBy { get; set; }
+    Guid? DeletedBy { get; set; }
     bool SoftDeleted { get; set; }
 }

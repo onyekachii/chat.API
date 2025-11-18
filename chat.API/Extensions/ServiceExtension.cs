@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using chat.Domain;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace chat.API.Extensions
 {
@@ -15,5 +17,9 @@ namespace chat.API.Extensions
             });
         }
        
+        public static void ConfigureMySqlContext(this IServiceCollection services, string connString)
+        {
+            services.AddDbContext<RepositoryContext<Guid>>(o => o.UseMySql(connString, MySqlServerVersion.LatestSupportedServerVersion));
+        }
     }
 }

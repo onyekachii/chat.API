@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace chat.Domain.Entities;
 
-[Index(nameof(ID), IsUnique = true)]
-[Index(nameof(Name), IsUnique = true)]
+//[Index(nameof(ID), IsUnique = true)]
+//[Index(nameof(Name), IsUnique = true)]
 public class App<TKeyType> : IBaseEntity<TKeyType>
 {
     [Required]
@@ -14,6 +14,7 @@ public class App<TKeyType> : IBaseEntity<TKeyType>
     [Required]
     [MaxLength(50)]
     public string Name { get; set; }
+        
     public DateTimeOffset? CreatedDate { get; set; }
     public TKeyType? CreatedBy { get; set; }
     public DateTimeOffset? UpdatedDate { get; set; }
@@ -21,4 +22,7 @@ public class App<TKeyType> : IBaseEntity<TKeyType>
     public DateTimeOffset? DeletedDate { get; set; }
     public TKeyType? DeletedBy { get; set; }
     public bool SoftDeleted { get; set; } = false;
+
+    public virtual List<User<TKeyType>>? AppUsers { get; set; }
+    public virtual List<Group<TKeyType>>? Groups { get; set; }
 }

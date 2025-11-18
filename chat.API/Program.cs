@@ -1,7 +1,7 @@
 using chat.API;
 using chat.API.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
-
+var aa = "Logging:LogLevel:Default";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,11 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
-// configure appsettings
+// setup appsettings and inject as service.. IOptions<T> == singleton & immutable; IOptionsSnapshot<T> == scoped; IOptionsMonitor == singleton & mutable
 var variables = builder.Configuration.GetSection("Variables");
 builder.Services.Configure<Appsettings>(variables);
 // cors
 builder.Services.ConfigureCors(variables.Get<Appsettings>() ?? throw new InvalidOperationException());
+
+builder.Services.ConfigureMySqlContext(builder.Configuration.GetConnectionString("sqlConnection") ?? throw new InvalidOperationException());
 
 var app = builder.Build();
 

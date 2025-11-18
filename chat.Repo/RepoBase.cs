@@ -1,6 +1,7 @@
 ﻿using chat.Domain;
 using chat.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq.Expressions;
 
 namespace chat.Repo
@@ -13,7 +14,7 @@ namespace chat.Repo
             Context = context;
         }
 
-        public async Task CreateAsync(T entity) => await Context.Set<T>().AddAsync(entity);
+        public async Task<EntityEntry<T>> CreateAsync(T entity) => await Context.Set<T>().AddAsync(entity);
 
         public void HardDelete(T entity) => Context.Set<T>().Remove(entity);
 

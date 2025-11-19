@@ -16,18 +16,18 @@ public class Group : IBaseEntity
     public string Name { get; set; }
 
     [Required]
-    public Guid AppId { get; set; }
+    public long AppId { get; set; }
     [ForeignKey(nameof(AppId))]
     public App App { get; set; }
 
     public string Description { get; set; }
 
-    public DateTimeOffset? CreatedDate { get; set; }
-    public Guid? CreatedBy { get; set; }
+    public DateTimeOffset? CreatedDate { get; set; } = DateTimeOffset.UtcNow;
+    public long? CreatedBy { get; set; }
     public DateTimeOffset? UpdatedDate { get; set; }
-    public Guid? UpdatedBy { get; set; }
+    public long? UpdatedBy { get; set; }
     public DateTimeOffset? DeletedDate { get; set; }
-    public Guid? DeletedBy { get; set; }
+    public long? DeletedBy { get; set; }
     public bool SoftDeleted { get; set; } = false;
 
     public virtual List<User>? Users { get; set; }

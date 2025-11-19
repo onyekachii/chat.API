@@ -1,9 +1,11 @@
 using chat.API;
 using chat.API.Extensions;
+using chat.Domain.DTOs;
+using chat.Domain.Entities;
 using chat.Repo;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
-var aa = "Logging:LogLevel:Default";
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -20,7 +22,7 @@ builder.Services.ConfigureCors(variables.Get<Appsettings>() ?? throw new Invalid
 var connString = builder.Configuration.GetConnectionString("sqlConnection") ?? throw new InvalidOperationException();
 builder.Services.AddDbContext<ChatContext>(o => o.UseMySql(connString, MySqlServerVersion.LatestSupportedServerVersion));
 
-builder.Services.AddSingleton<IRepoFactory, RepoFactory>();
+builder.Services.AddScoped<IRepoFactory, RepoFactory>();
 
 var app = builder.Build();
 
@@ -41,37 +43,35 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 app.UseStaticFiles();
 app.UseCors(variables.Get<Appsettings>()?.CorsPolicyName ?? string.Empty);
 app.UseAuthorization();
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
 
-app.MapGet("/weatherforecast", () =>
+app.MapPost("/app/create", async (IRepoFactory factory, AppDTO app) =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+    var result = await factory.App.CreateAsync(AppDTO.mapDtoToApp(app));
+    return Results.Ok(result.Entity);
+}).WithName("CreateApp").WithTags("App").WithOpenApi();
+
+app.MapPost("/group/create", async (IRepoFactory factory, GroupDTO group) =>
+{
+    var result = await factory.Group.CreateAsync(GroupDTO.mapDtoToGroup(group));
+    return Results.Ok(result.Entity);
+}).WithName("CreateGroup").WithTags("Group").WithOpenApi();
+
+app.MapGet("/group/getbyname", async (IRepoFactory factory, string name) =>
+{
+    var result =  factory.Group.FindByCondition(g => g.Name.Equals(name, StringComparison.OrdinalIgnoreCase)).SingleOrDefault();
+    return Results.Ok(result);
+}).WithName("GetGroupByName").WithTags("Group").WithOpenApi();
+
+app.MapPost("/user/create", async (IRepoFactory factory, UserDTO user) =>
+{
+    var result = await factory.User.CreateAsync(UserDTO.mapDtoToUser(user));
+    return Results.Ok(result.Entity);
+}).WithName("CreateUser").WithTags("User").WithOpenApi();
+
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
-
-// model keys
-// get Group
 // delete group
 // update group
-// mock db
 // test project
 // add users to group
 // get group users

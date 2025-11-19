@@ -15,13 +15,13 @@ public class App : IBaseEntity
     [Required]
     [MaxLength(50)]
     public string Name { get; set; }
-        
-    public DateTimeOffset? CreatedDate { get; set; }
-    public Guid? CreatedBy { get; set; }
+
+    public DateTimeOffset? CreatedDate { get; set; } = DateTimeOffset.UtcNow;
+    public long? CreatedBy { get; set; }
     public DateTimeOffset? UpdatedDate { get; set; }
-    public Guid? UpdatedBy { get; set; }
+    public long? UpdatedBy { get; set; }
     public DateTimeOffset? DeletedDate { get; set; }
-    public Guid? DeletedBy { get; set; }
+    public long? DeletedBy { get; set; }
     public bool SoftDeleted { get; set; } = false;
 
     public virtual List<User>? AppUsers { get; set; }

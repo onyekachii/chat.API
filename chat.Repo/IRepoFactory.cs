@@ -13,6 +13,7 @@ namespace chat.Repo
         IAppRepo App { get; }
         IUserRepo User { get; }
         IGroupRepo Group { get; }
+        IMessageRepo Message { get; }
         Task SaveAsync();
     }
 }

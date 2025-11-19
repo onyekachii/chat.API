@@ -44,5 +44,18 @@ namespace chat.Domain.DTOs
             DeletedBy = dto.DeletedBy
         };
     };
+
+    public record MessageDTO(long? GroupId, [MaxLength(2000)] string Text,
+        long CreatedBy, long UpdatedBy, long DeletedBy)
+    {
+        public static Message mapDtoToMessage(MessageDTO dto) => new Message
+        {
+            GroupId = dto.GroupId,
+            Text = dto.Text,
+            CreatedBy = dto.CreatedBy,
+            UpdatedBy = dto.UpdatedBy,
+            DeletedBy = dto.DeletedBy
+        };
+    };
 }
 

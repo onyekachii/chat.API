@@ -14,6 +14,7 @@ namespace chat.Repo
         IUserRepo User { get; }
         IGroupRepo Group { get; }
         IMessageRepo Message { get; }
+        IRefreshTokenRepo RefreshToken {  get; }
         Task SaveAsync();
     }
 }

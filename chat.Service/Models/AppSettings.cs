@@ -1,4 +1,4 @@
-﻿namespace chat.API
+﻿namespace chat.Service.Models
 {
     public class Appsettings
     {

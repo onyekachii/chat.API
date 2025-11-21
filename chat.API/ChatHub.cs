@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace chat.API
 {
-    [Authorize]
+    //[Authorize]
     public class ChatHub : Hub
     {
         private readonly IRepoFactory _factory;
@@ -16,7 +16,7 @@ namespace chat.API
             _factory = factory;
         }
 
-        public async Task SendMessageToRoom(long groupId, string message)
+        public async Task SendMessageToGroup(long groupId, string message)
         {
             var userId = Context.UserIdentifier ?? Context.ConnectionId;
             var userName = Context.User?.Identity?.Name ?? "anon";
@@ -45,11 +45,11 @@ namespace chat.API
             await base.OnConnectedAsync();
         }
 
-        public async Task JoinRoom(string roomName) =>
-            await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
+        public async Task JoinGroup(string groupName) =>
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
 
-        public async Task LeaveRoom(string roomName) =>
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomName);
+        public async Task LeaveGroup(string groupName) =>
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
 
     }
 }

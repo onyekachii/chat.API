@@ -10,6 +10,7 @@ namespace chat.Repo
         private IUserRepo _userRepo;
         private IGroupRepo _groupRepo;
         private IMessageRepo _messageRepo;
+        private IRefreshTokenRepo _refreshTokenRepo;
         public RepoFactory(ChatContext chatContext)
         {
             _chatContext = chatContext;
@@ -41,6 +42,14 @@ namespace chat.Repo
             get
             {
                 return _messageRepo ??= new MessageRepo(_chatContext);
+            }
+        }
+
+        public IRefreshTokenRepo RefreshToken
+        {
+            get
+            {
+                return _refreshTokenRepo ??= new RefreshTokenRepo(_chatContext);
             }
         }
 

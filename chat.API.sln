@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.3.11206.111 d18.3
+VisualStudioVersion = 18.3.11206.111
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chat.API", "chat.API\chat.API.csproj", "{EDEEC4E6-33FC-9021-049D-D93475DB98D4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chat.Domain", "chat.Domain\chat.Domain.csproj", "{E579DD5C-66F6-4694-B6E0-DA93FDFB3690}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chat.Repo", "chat.Repo\chat.Repo.csproj", "{7C50B664-7CAE-4509-9041-4A2F4B5D3DFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chat.Service", "chat.Service\chat.Service.csproj", "{AE1B434D-CF4F-4EFA-A1BB-5D14E2DE9E9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,18 @@ Global
 		{7C50B664-7CAE-4509-9041-4A2F4B5D3DFF}.Release|x64.Build.0 = Release|Any CPU
 		{7C50B664-7CAE-4509-9041-4A2F4B5D3DFF}.Release|x86.ActiveCfg = Release|Any CPU
 		{7C50B664-7CAE-4509-9041-4A2F4B5D3DFF}.Release|x86.Build.0 = Release|Any CPU
+		{AE1B434D-CF4F-4EFA-A1BB-5D14E2DE9E9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE1B434D-CF4F-4EFA-A1BB-5D14E2DE9E9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE1B434D-CF4F-4EFA-A1BB-5D14E2DE9E9B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AE1B434D-CF4F-4EFA-A1BB-5D14E2DE9E9B}.Debug|x64.Build.0 = Debug|Any CPU
+		{AE1B434D-CF4F-4EFA-A1BB-5D14E2DE9E9B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AE1B434D-CF4F-4EFA-A1BB-5D14E2DE9E9B}.Debug|x86.Build.0 = Debug|Any CPU
+		{AE1B434D-CF4F-4EFA-A1BB-5D14E2DE9E9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE1B434D-CF4F-4EFA-A1BB-5D14E2DE9E9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE1B434D-CF4F-4EFA-A1BB-5D14E2DE9E9B}.Release|x64.ActiveCfg = Release|Any CPU
+		{AE1B434D-CF4F-4EFA-A1BB-5D14E2DE9E9B}.Release|x64.Build.0 = Release|Any CPU
+		{AE1B434D-CF4F-4EFA-A1BB-5D14E2DE9E9B}.Release|x86.ActiveCfg = Release|Any CPU
+		{AE1B434D-CF4F-4EFA-A1BB-5D14E2DE9E9B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

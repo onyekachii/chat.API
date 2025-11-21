@@ -17,6 +17,5 @@ namespace chat.Repo
         void Update(T entity);
         void Delete(IBaseEntity entity);
         void HardDelete(T entity);
-        Task DeleteAllAsync();
     }
 }

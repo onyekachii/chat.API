@@ -19,9 +19,7 @@ namespace chat.Repo
         public void HardDelete(T entity) => Context.Set<T>().Remove(entity);
 
         public void Delete(IBaseEntity entity) => entity.SoftDeleted = true;
-        
-        public async Task DeleteAllAsync() => await Context.Set<T>().ExecuteDeleteAsync();
-        
+                
         public IQueryable<T> FindByCondition(Expression<Func<T, bool>> exp) => Context.Set<T>().Where(exp).AsNoTracking();
 
         public IQueryable<T> GetAll() => Context.Set<T>().AsNoTracking();

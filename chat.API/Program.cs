@@ -1,10 +1,12 @@
 using chat.API;
 using chat.API.Extensions;
+using chat.API.MiddleWare;
 using chat.Domain.DTOs;
 using chat.Repo;
 using chat.Service.Implementation;
 using chat.Service.Interface;
 using chat.Service.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +32,7 @@ builder.Services.ConfigureCors(variables.Get<Appsettings>() ?? throw new Invalid
 builder.Services.AddDbContext<ChatContext>(o => o.UseMySql(connString, MySqlServerVersion.LatestSupportedServerVersion));
 builder.Services.AddScoped<IRepoFactory, RepoFactory>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-// ---- Authentication (JWT) ----
+//  Authentication (JWT) 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -67,8 +69,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         //    }
         //};
     });
-builder.Services.AddAuthorization();
+// ApiKeyAuth
+builder.Services.AddAuthentication(ApiKeyAuthHandler.SchemeName)
+    .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthHandler>(
+        ApiKeyAuthHandler.SchemeName, o => { });
 
+builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

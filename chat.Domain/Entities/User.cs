@@ -12,6 +12,8 @@ public class User : IBaseEntity
     [MaxLength(50)]
     public string Username { get; set; }
 
+    public string DisplayName { get; set; }
+
     [Required]
     public long AppId { get; set; }
     public App App { get; set; }

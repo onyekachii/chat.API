@@ -11,6 +11,7 @@ namespace chat.Repo
         private IGroupRepo _groupRepo;
         private IMessageRepo _messageRepo;
         private IRefreshTokenRepo _refreshTokenRepo;
+        private IApiKeyRepo _apiKeyRepo;
         public RepoFactory(ChatContext chatContext)
         {
             _chatContext = chatContext;
@@ -53,6 +54,13 @@ namespace chat.Repo
             }
         }
 
+        public IApiKeyRepo ApiKey
+        {
+            get
+            {
+                return _apiKeyRepo ??= new ApiKeyRepo(_chatContext);
+            }
+        }
         public Task SaveAsync() => _chatContext.SaveChangesAsync();
     }
 }

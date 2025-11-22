@@ -39,8 +39,8 @@ namespace chat.Service.Implementation
             {
                 Token = GenerateRefreshTokenString(),
                 UserId = user.Username,
-                Expires = DateTime.UtcNow.AddDays(_jwtSettings.CurrentValue.RefreshTokenExpirationDays),
-                Created = DateTime.UtcNow,
+                Expires = DateTimeOffset.UtcNow.AddDays(_jwtSettings.CurrentValue.RefreshTokenExpirationDays),
+                CreatedDate = DateTimeOffset.UtcNow,
                 CreatedByIp = ipAddress // is IP address still a good variable since it could change before expiry
             };
             await _repoFactory.RefreshToken.CreateAsync(refreshToken);

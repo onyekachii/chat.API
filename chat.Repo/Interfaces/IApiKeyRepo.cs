@@ -1,8 +1,9 @@
 ﻿using chat.Domain.Entities;
 
+
 namespace chat.Repo.Interfaces
 {
-    public interface IRefreshTokenRepo : IRepoBase<RefreshToken>
+    public interface IApiKeyRepo : IRepoBase<ApiKey>
     {
     }
 }

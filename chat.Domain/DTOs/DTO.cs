@@ -57,5 +57,14 @@ namespace chat.Domain.DTOs
             DeletedBy = dto.DeletedBy
         };
     };
+
+    public record ApiKeyDTO([Required][MaxLength(100)] string Key, [Required] long AppId)
+    {
+        public static ApiKey mapDtoToApiKey(ApiKeyDTO dto) => new ApiKey
+        {
+            Key = dto.Key,
+            AppID = dto.AppId
+        };
+    };
 }
 

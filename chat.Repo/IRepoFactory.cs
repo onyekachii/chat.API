@@ -15,6 +15,7 @@ namespace chat.Repo
         IGroupRepo Group { get; }
         IMessageRepo Message { get; }
         IRefreshTokenRepo RefreshToken {  get; }
+        IApiKeyRepo ApiKey { get; }
         Task SaveAsync();
     }
 }

@@ -1,4 +1,5 @@
-﻿using chat.Service.Interface;
+﻿using chat.Service;
+using chat.Service.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
@@ -9,13 +10,13 @@ namespace chat.API.MiddleWare
     public class ApiKeyAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         public const string SchemeName = "ApiKey";
-        private readonly IAuthService _authservice;
+        private readonly IServiceFactory _service;
 
         public ApiKeyAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
-            ILoggerFactory logger, UrlEncoder encoder, IAuthService authService)
+            ILoggerFactory logger, UrlEncoder encoder, IServiceFactory service)
             : base(options, logger, encoder)
         {
-            _authservice = authService;
+            _service = service;
         }
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
@@ -27,8 +28,8 @@ namespace chat.API.MiddleWare
             
             long.TryParse(appId, out var appID);
 
-            var validKey = _authservice.GetApiKey(appID).Result;
-            if (!_authservice.IsApiKeyValid(apiKeyFromCLient!, validKey).Result)
+            var validKey = _service.AuthService.GetApiKeyAsync(appID).Result;
+            if (!_service.AuthService.IsApiKeyValid(apiKeyFromCLient!, validKey).Result)
                 return Task.FromResult(AuthenticateResult.Fail("Invalid API key"));
 
             var identity = new ClaimsIdentity(SchemeName);

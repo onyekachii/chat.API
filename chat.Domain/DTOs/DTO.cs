@@ -20,7 +20,7 @@ namespace chat.Domain.DTOs
         };
     };
 
-    public record AppDTO([Required] [MaxLength(50)] string Name,
+    public record AppDTO([Required][MaxLength(50)] string Name,
         long CreatedBy, long UpdatedBy, long DeletedBy)
     {
         public static App mapDtoToApp(AppDTO dto) => new App
@@ -32,17 +32,19 @@ namespace chat.Domain.DTOs
         };
     };
 
-    public record UserDTO([Required][MaxLength(50)] string Username, [Required] long AppId,
+    public record UserDTO([Required][MaxLength(50)] string Username, string DisplayName,
         long CreatedBy, long UpdatedBy, long DeletedBy)
     {
-        public static User mapDtoToUser(UserDTO dto) => new User
+        public static User mapDtoToUser(UserDTO dto, long AppID) => new User
         {
             Username = dto.Username,
-            AppId = dto.AppId,
-            CreatedBy = dto.CreatedBy,
-            UpdatedBy = dto.UpdatedBy,
-            DeletedBy = dto.DeletedBy
+            DisplayName = dto.DisplayName,
+            AppId = AppID            
         };
+        public static UserDTO mapUserToDto(User u, long AppID) => new UserDTO(
+            Username: u.Username,
+            DisplayName: u.DisplayName, 0,0,0   
+        );
     };
 
     public record MessageDTO(long? GroupId, [MaxLength(2000)] string Text,
@@ -65,6 +67,22 @@ namespace chat.Domain.DTOs
             Key = dto.Key,
             AppID = dto.AppId
         };
+    };
+
+    public record RefreshTokenDTO(string Token, DateTimeOffset Expires, string Username)
+    {
+        //todo: add other properties if needed
+        public static RefreshToken mapDtoToRefreshToken(RefreshTokenDTO dto) => new RefreshToken
+        {
+            Token = dto.Token,
+            Expires = dto.Expires
+        };
+        public static RefreshTokenDTO mapRefreshTokenToDto(RefreshToken m) => new RefreshTokenDTO
+        (
+            Token: m.Token,
+            Expires: m.Expires,
+            Username: m.UserName
+        );
     };
 }
 

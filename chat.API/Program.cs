@@ -3,6 +3,7 @@ using chat.API.Extensions;
 using chat.API.MiddleWare;
 using chat.Domain.DTOs;
 using chat.Repo;
+using chat.Service;
 using chat.Service.Implementation;
 using chat.Service.Interface;
 using chat.Service.Models;
@@ -31,7 +32,9 @@ builder.Services.Configure<JwtConfig>(jwt);
 builder.Services.ConfigureCors(variables.Get<Appsettings>() ?? throw new InvalidOperationException());
 builder.Services.AddDbContext<ChatContext>(o => o.UseMySql(connString, MySqlServerVersion.LatestSupportedServerVersion));
 builder.Services.AddScoped<IRepoFactory, RepoFactory>();
-builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IServiceFactory, ServiceFactory>();
 //  Authentication (JWT) 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -123,12 +126,6 @@ app.MapGet("api/group/getbyname", async (IRepoFactory factory, string name) =>
     return Results.Ok(result);
 }).WithName("GetGroupByName").WithTags("Group").WithOpenApi();
 
-app.MapPost("api/user/create", async (IRepoFactory factory, UserDTO user) =>
-{
-    var result = await factory.User.CreateAsync(UserDTO.mapDtoToUser(user));
-    await factory.SaveAsync();
-    return Results.Ok(result.Entity);
-}).WithName("CreateUser").WithTags("User").WithOpenApi();
 
 //app.MapGet("/api/group/{group}/messages", async (string group, ChatDbContext db, [FromQuery] int take = 50) =>
 //{

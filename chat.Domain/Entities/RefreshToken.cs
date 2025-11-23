@@ -1,6 +1,8 @@
 ﻿using chat.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,15 +11,21 @@ namespace chat.Domain.Entities
 {
     public class RefreshToken : IBaseEntity
     {
+        [Key]
         public int Id { get; set; }
-        public string Token { get; set; } = null!;
-        public string UserId { get; set; } = null!;
+        [Required]
+        public long AppID { get; set; }
+        public App App { get; set; }
+        [Required]
+        public string Token { get; set; }
+        [Required]
+        public string UserName { get; set; }
+        [ForeignKey(nameof(UserName))]
+        public User User { get; set; }
         public DateTimeOffset Expires { get; set; }
-        public string CreatedByIp { get; set; } = null!;
         public bool IsUsed { get; set; }
         public bool IsRevoked { get; set; }
-        public DateTime? Revoked { get; set; }
-        public string? RevokedByIp { get; set; }
+        public DateTime? RevokedDate { get; set; }
         public string? ReplacedByToken { get; set; }
         public bool IsActive => !IsRevoked && !IsUsed && Expires > DateTimeOffset.UtcNow;
 

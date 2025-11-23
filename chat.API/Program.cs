@@ -10,7 +10,10 @@ using chat.Service.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -34,6 +37,7 @@ builder.Services.AddDbContext<ChatContext>(o => o.UseMySql(connString, MySqlServ
 builder.Services.AddScoped<IRepoFactory, RepoFactory>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAppService, AppService>();
 builder.Services.AddScoped<IServiceFactory, ServiceFactory>();
 //  Authentication (JWT) 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -51,7 +55,28 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Get<JwtConfig>().Key)),
             ClockSkew = TimeSpan.Zero
         };
-                
+
+
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                System.Diagnostics.Debug.WriteLine("AUTH FAILED: " + context.Exception.Message);
+                return Task.CompletedTask;
+            },
+
+            OnMessageReceived = context =>
+            {
+                System.Diagnostics.Debug.WriteLine("TOKEN RECEIVED: " + context.Token);
+                return Task.CompletedTask;
+            },
+
+            OnTokenValidated = context =>
+            {
+                System.Diagnostics.Debug.WriteLine("TOKEN VALIDATED OK");
+                return Task.CompletedTask;
+            }
+        };
         //// allow token in querystring for WebSockets/negotiate
         //var originalOnMessage = options.Events.OnMessageReceived;
         //options.Events = new JwtBearerEvents
@@ -71,11 +96,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         //        }
         //    }
         //};
-    });
-// ApiKeyAuth
-builder.Services.AddAuthentication(ApiKeyAuthHandler.SchemeName)
+    })
     .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthHandler>(
         ApiKeyAuthHandler.SchemeName, o => { });
+    
 
 builder.Services.AddAuthorization();
 var app = builder.Build();
@@ -105,11 +129,11 @@ app.MapControllers();
 #region ENDPOINTS
 app.MapHub<ChatHub>("api/hubs/chat");
 
-app.MapPost("api/app/create", async (IRepoFactory factory, AppDTO app) =>
+app.MapPost("api/app/create", async (IServiceFactory service, [FromBody] AppDTO app) =>
 {
-    var result = await factory.App.CreateAsync(AppDTO.mapDtoToApp(app));
-    await factory.SaveAsync();
-    return Results.Ok(result.Entity);
+    var result = await service.AppService.CreateAppAsync(app);
+    await service.db.SaveAsync();
+    return Results.Ok(result);
 }).WithName("CreateApp").WithTags("App").WithOpenApi();
 
 app.MapPost("api/group/create", async (IRepoFactory factory, GroupDTO group) =>

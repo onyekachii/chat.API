@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using chat.Repo;
 
@@ -11,9 +12,11 @@ using chat.Repo;
 namespace chat.Repo.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    partial class ChatContextModelSnapshot : ModelSnapshot
+    [Migration("20251123101847_SecondMig")]
+    partial class SecondMig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,49 +38,6 @@ namespace chat.Repo.Migrations
                     b.HasIndex("UsersUsername");
 
                     b.ToTable("GroupUser");
-                });
-
-            modelBuilder.Entity("chat.Domain.Entities.ApiKey", b =>
-                {
-                    b.Property<string>("Key")
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<long>("AppID")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset?>("CreatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<long?>("DeletedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset?>("DeletedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("Revoked")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("SoftDeleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset?>("UpdatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Key");
-
-                    b.HasIndex("AppID");
-
-                    b.HasIndex("Key")
-                        .IsUnique();
-
-                    b.ToTable("ApiKeys");
                 });
 
             modelBuilder.Entity("chat.Domain.Entities.App", b =>
@@ -342,17 +302,6 @@ namespace chat.Repo.Migrations
                         .HasForeignKey("UsersUsername")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("chat.Domain.Entities.ApiKey", b =>
-                {
-                    b.HasOne("chat.Domain.Entities.App", "App")
-                        .WithMany()
-                        .HasForeignKey("AppID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("App");
                 });
 
             modelBuilder.Entity("chat.Domain.Entities.Group", b =>

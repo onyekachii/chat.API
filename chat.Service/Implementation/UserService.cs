@@ -23,14 +23,14 @@ namespace chat.Service.Implementation
         {
             var user = UserDTO.mapDtoToUser(dto, appId);
             user.CreatedDate = DateTimeOffset.UtcNow;
-            await _repoFactory.User.CreateAsync(user);
-            return user;
+            return (await _repoFactory.User.CreateAsync(user)).Entity;
         }
 
-        public async Task<User?> GetUserAsync(string username, long appId)
+        public async Task<User?> GetUserAsync(string username, long appId, bool throwExpOnUserNotFound)
         {
-            return await _repoFactory.User.FindByCondition(u => string.Equals(u.Username, username) &&
-                u.AppId == appId && !u.SoftDeleted).SingleOrDefaultAsync() ?? throw new UnauthorizedAccessException("User does not exists");
+            var user = await _repoFactory.User.FindByCondition(u => string.Equals(u.Username, username) &&
+                u.AppId == appId && !u.SoftDeleted).SingleOrDefaultAsync();
+            return user is null && throwExpOnUserNotFound ? throw new UnauthorizedAccessException("User does not exists") : user;
         }
     }
 }

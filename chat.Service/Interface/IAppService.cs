@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace chat.Service.Interface
 {
-    public interface IUserService
+    public interface IAppService
     {
-        Task<User> CreateUserAsync(UserDTO dto, long appId);
-
-        Task<User?> GetUserAsync(string username, long appId, bool throwExpOnUserNotFound);
+        Task<App> CreateAppAsync(AppDTO dto);
     }
 }

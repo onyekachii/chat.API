@@ -16,12 +16,15 @@ namespace chat.Service.Implementation
     {
         private IRepoFactory _db;
         private readonly IOptionsMonitor<JwtConfig> _jwtSettings;
+        private readonly IUserService _userService;
 
-        public AuthService(IRepoFactory db, IOptionsMonitor<JwtConfig> jwtSettings)
+        public AuthService(IRepoFactory db, IOptionsMonitor<JwtConfig> jwtSettings, IUserService userService)
         {
             _db = db;
             _jwtSettings = jwtSettings;
+            _userService = userService;
         }
+
         public async Task<string> GetApiKeyAsync(long appId)
         {
             var key = await _db.ApiKey.FindByCondition(a => a.AppID == appId 
@@ -30,17 +33,26 @@ namespace chat.Service.Implementation
                 throw new Exception( "Api key not found for the given App ID." );
             return key.Key;
         }
+
         public async Task<bool> IsApiKeyValid(string apiKeyFromCLient, string apiKey)
             => string.Equals(apiKeyFromCLient, apiKey);
 
-        public async Task<(string accessToken, RefreshToken refreshToken)> CreateTokensAsync(User userModel)
+        public async Task<(string accessToken, RefreshToken refreshToken)> CreateTokensAsync(User userModel, Role role)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.CurrentValue.Key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var user = _db.User.FindByCondition(u => u.Username == userModel.Username && u.AppId == userModel.AppId).SingleOrDefault();
+            var user = await _userService.GetUserAsync(userModel.Username, userModel.AppId, true);
+            var claims = new List<Claim>
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub, user!.Username),
+                    new Claim("Role", role.ToString()),
+                    new Claim("AppId", user.AppId.ToString())
+                };
+
             var tokenDescriptor = new JwtSecurityToken(
                 issuer: _jwtSettings.CurrentValue.Issuer,
                 audience: _jwtSettings.CurrentValue.Audience,
+                claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(_jwtSettings.CurrentValue.AccessTokenExpirationMinutes),
                 signingCredentials: creds
             );
@@ -51,11 +63,11 @@ namespace chat.Service.Implementation
             {
                 Token = GenerateRefreshTokenString(),
                 UserName = user.Username,
+                AppID = userModel.AppId,
                 Expires = DateTimeOffset.UtcNow.AddDays(_jwtSettings.CurrentValue.RefreshTokenExpirationDays),
                 CreatedDate = DateTimeOffset.UtcNow,
             };
-            await _db.RefreshToken.CreateAsync(refreshToken);
-            return (accessToken, refreshToken);
+            return (accessToken, (await _db.RefreshToken.CreateAsync(refreshToken)).Entity);
         }
 
         public ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)

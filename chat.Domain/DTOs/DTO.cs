@@ -25,13 +25,10 @@ namespace chat.Domain.DTOs
     {
         public static App mapDtoToApp(AppDTO dto) => new App
         {
-            Name = dto.Name,
-            CreatedBy = dto.CreatedBy,
-            UpdatedBy = dto.UpdatedBy,
-            DeletedBy = dto.DeletedBy
+            Name = dto.Name
         };
     };
-
+    
     public record UserDTO([Required][MaxLength(50)] string Username, string DisplayName,
         long CreatedBy, long UpdatedBy, long DeletedBy)
     {
@@ -69,20 +66,17 @@ namespace chat.Domain.DTOs
         };
     };
 
-    public record RefreshTokenDTO(string Token, DateTimeOffset Expires, string Username)
-    {
-        //todo: add other properties if needed
-        public static RefreshToken mapDtoToRefreshToken(RefreshTokenDTO dto) => new RefreshToken
-        {
-            Token = dto.Token,
-            Expires = dto.Expires
-        };
+    public record RefreshTokenDTO(string Token, string Username )
+    {        
         public static RefreshTokenDTO mapRefreshTokenToDto(RefreshToken m) => new RefreshTokenDTO
         (
             Token: m.Token,
-            Expires: m.Expires,
             Username: m.UserName
         );
     };
+
+    public record RefreshRequestDTO(string Token, string Username, byte Role);
+
+    public record ExternalAuthRequestDTO(string username, byte role);
 }
 

@@ -17,14 +17,14 @@ namespace chat.Domain.Entities
         public long AppID { get; set; }
         [ForeignKey(nameof(AppID))]
         public App App { get; set; }
-        public bool Revoked { get; set; }
+        public bool Revoked { get; set; } = false;
         public DateTimeOffset? CreatedDate { get; set; }
         public long? CreatedBy { get; set; }
         public DateTimeOffset? UpdatedDate { get; set; }
         public long? UpdatedBy { get; set; }
         public DateTimeOffset? DeletedDate { get; set; }
         public long? DeletedBy { get; set; }
-        public bool SoftDeleted { get; set; }
+        public bool SoftDeleted { get; set; } = false;
 
     }
 }

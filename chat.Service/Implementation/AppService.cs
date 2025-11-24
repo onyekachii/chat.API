@@ -12,10 +12,10 @@ namespace chat.Service.Implementation
         {
             _repoFactory = rf;
         }
-        public async Task<App> CreateAppAsync(AppDTO dto)
+        public async Task<App> CreateAppAsync(AppDTO dto, string createdBy)
         {
             var app = AppDTO.mapDtoToApp(dto);
-            app.CreatedBy = dto.CreatedBy;
+            app.CreatedBy = createdBy;
             app.CreatedDate = DateTimeOffset.UtcNow;
 
             return (await _repoFactory.App.CreateAsync(app)).Entity;

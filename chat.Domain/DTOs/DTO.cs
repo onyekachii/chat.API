@@ -5,23 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chat.Domain.DTOs
 {
-    public record GroupDTO([MaxLength(50)] string Name,
-        [Required] long AppId, string Description, long CreatedBy,
-        long UpdatedBy, long DeletedBy)
-    {
-        public static Group mapDtoToGroup(GroupDTO dto) => new Group
-        {
-            Name = dto.Name,
-            AppId = dto.AppId,
-            Description = dto.Description,
-            CreatedBy = dto.CreatedBy,
-            UpdatedBy = dto.UpdatedBy,
-            DeletedBy = dto.DeletedBy
-        };
-    };
+    
+    public record DTO(string CreatedBy, long AppID);
 
-    public record AppDTO([Required][MaxLength(50)] string Name,
-        long CreatedBy, long UpdatedBy, long DeletedBy)
+    public record AppDTO([Required][MaxLength(50)] string Name)
     {
         public static App mapDtoToApp(AppDTO dto) => new App
         {
@@ -50,22 +37,11 @@ namespace chat.Domain.DTOs
         public static Message mapDtoToMessage(MessageDTO dto) => new Message
         {
             GroupId = dto.GroupId,
-            Text = dto.Text,
-            CreatedBy = dto.CreatedBy,
-            UpdatedBy = dto.UpdatedBy,
-            DeletedBy = dto.DeletedBy
+            Text = dto.Text
         };
     };
 
-    public record ApiKeyDTO([Required][MaxLength(100)] string Key, [Required] long AppId)
-    {
-        public static ApiKey mapDtoToApiKey(ApiKeyDTO dto) => new ApiKey
-        {
-            Key = dto.Key,
-            AppID = dto.AppId
-        };
-    };
-
+    
     public record RefreshTokenDTO(string Token, string Username )
     {        
         public static RefreshTokenDTO mapRefreshTokenToDto(RefreshToken m) => new RefreshTokenDTO

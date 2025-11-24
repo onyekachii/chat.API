@@ -19,11 +19,11 @@ namespace chat.Domain.Entities
         public App App { get; set; }
         public bool Revoked { get; set; } = false;
         public DateTimeOffset? CreatedDate { get; set; }
-        public long? CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
         public DateTimeOffset? UpdatedDate { get; set; }
-        public long? UpdatedBy { get; set; }
+        public string? UpdatedBy { get; set; }
         public DateTimeOffset? DeletedDate { get; set; }
-        public long? DeletedBy { get; set; }
+        public string? DeletedBy { get; set; }
         public bool SoftDeleted { get; set; } = false;
 
     }

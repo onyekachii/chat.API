@@ -8,6 +8,7 @@ namespace chat.Service
         IAuthService AuthService { get; }
         IUserService UserService { get; }
         IAppService AppService { get; }
+        IGroupService GroupService { get; }
         IRepoFactory db { get; }
 
     }

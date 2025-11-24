@@ -20,12 +20,12 @@ namespace chat.API.Controllers
         public AuthController(IOptionsMonitor<JwtConfig> jwtconfig, IServiceFactory service)
         {
             _jwtConfig = jwtconfig;
-            _service = service;            
+            _service = service;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromHeader(Name = "app-id")] long appId,
-            [FromBody] UserDTO model)
+            [FromBody] UserDTO model) // future reminder, if endpoint will take in data from frontend client, appid should be retreived some other way. AppId must never been known by client side (for security)  
         {
             var existingUser = await _service.UserService.GetUserAsync(model.Username, appId, false);
             if (existingUser != null) return Conflict("User already exists");

@@ -12,9 +12,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +24,33 @@ var connString = builder.Configuration.GetConnectionString("sqlConnection") ?? t
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{   
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please insert JWT token into the field. Example: {token}",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
 // setup appsettings and inject as service.. IOptions<T> == singleton & immutable; IOptionsSnapshot<T> == scoped; IOptionsMonitor == singleton & mutable
@@ -38,6 +63,7 @@ builder.Services.AddScoped<IRepoFactory, RepoFactory>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAppService, AppService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IServiceFactory, ServiceFactory>();
 //  Authentication (JWT) 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -102,6 +128,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     
 
 builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -131,17 +158,10 @@ app.MapHub<ChatHub>("api/hubs/chat");
 
 app.MapPost("api/app/create", async (IServiceFactory service, [FromBody] AppDTO app) =>
 {
-    var result = await service.AppService.CreateAppAsync(app);
+    var result = await service.AppService.CreateAppAsync(app, "");
     await service.db.SaveAsync();
     return Results.Ok(result);
-}).WithName("CreateApp").WithTags("App").WithOpenApi();
-
-app.MapPost("api/group/create", async (IRepoFactory factory, GroupDTO group) =>
-{
-    var result = await factory.Group.CreateAsync(GroupDTO.mapDtoToGroup(group));
-    await factory.SaveAsync();
-    return Results.Ok(result.Entity);
-}).WithName("CreateGroup").WithTags("Group").WithOpenApi();
+}).WithName("CreateApp").WithTags("App").WithOpenApi().RequireAuthorization();
 
 app.MapGet("api/group/getbyname", async (IRepoFactory factory, string name) =>
 {
@@ -162,7 +182,6 @@ app.MapGet("api/group/getbyname", async (IRepoFactory factory, string name) =>
 //    return Results.Ok(msgs);
 //}).RequireAuthorization();
 
-// migration
 // delete group
 // update group
 // test project

@@ -10,13 +10,13 @@ namespace chat.API.MiddleWare
     public class ApiKeyAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         public const string SchemeName = "ApiKey";
-        private readonly IServiceFactory _service;
+        private readonly IAuthService _auth ;
 
         public ApiKeyAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
-            ILoggerFactory logger, UrlEncoder encoder, IServiceFactory service)
+            ILoggerFactory logger, UrlEncoder encoder, IAuthService auth)
             : base(options, logger, encoder)
         {
-            _service = service;
+            _auth = auth;
         }
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
@@ -28,8 +28,8 @@ namespace chat.API.MiddleWare
             
             long.TryParse(appId, out var appID);
 
-            var validKey = _service.AuthService.GetApiKeyAsync(appID).Result;
-            if (!_service.AuthService.IsApiKeyValid(apiKeyFromCLient!, validKey).Result)
+            var validKey = _auth.GetApiKeyAsync(appID).Result;
+            if (!_auth.IsApiKeyValid(apiKeyFromCLient!, validKey).Result)
                 return Task.FromResult(AuthenticateResult.Fail("Invalid API key"));
 
             var identity = new ClaimsIdentity(SchemeName);

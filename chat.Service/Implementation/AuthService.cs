@@ -14,11 +14,11 @@ namespace chat.Service.Implementation
 {
     public class AuthService : IAuthService
     {
-        private IRepoFactory _db;
+        private IUnitOfWork _db;
         private readonly IOptionsMonitor<JwtConfig> _jwtSettings;
         private readonly IUserService _userService;
 
-        public AuthService(IRepoFactory db, IOptionsMonitor<JwtConfig> jwtSettings, IUserService userService)
+        public AuthService(IUnitOfWork db, IOptionsMonitor<JwtConfig> jwtSettings, IUserService userService)
         {
             _db = db;
             _jwtSettings = jwtSettings;

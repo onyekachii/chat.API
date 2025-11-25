@@ -2,17 +2,18 @@
 using chat.Domain.Entities;
 using chat.Repo;
 using chat.Service.Interface;
+using Microsoft.EntityFrameworkCore;
 using static chat.Domain.DTOs.GroupTypes;
 
 namespace chat.Service.Implementation
 {
     public class GroupService : IGroupService
     {
-        IRepoFactory _repoFactory;
+        IUnitOfWork UOW;
 
-        public GroupService(IRepoFactory repoFactory)
+        public GroupService(IUnitOfWork repoFactory)
         {
-            _repoFactory = repoFactory;
+            UOW = repoFactory;
         }
         public async Task<Group> CreateGroupAsync(GroupPostRequestDTO dto, DTO baseDto)
         {

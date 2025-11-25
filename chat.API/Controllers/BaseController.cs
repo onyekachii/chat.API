@@ -11,7 +11,7 @@ namespace chat.API.Controllers
     public class BaseController : ControllerBase, IActionFilter
     {
         protected DTO? UserInfo;
-        
+                
         void IActionFilter.OnActionExecuted(ActionExecutedContext context)
         {
            

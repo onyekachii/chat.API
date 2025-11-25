@@ -59,12 +59,11 @@ builder.Services.Configure<JwtConfig>(jwt);
 // cors
 builder.Services.ConfigureCors(variables.Get<Appsettings>() ?? throw new InvalidOperationException());
 builder.Services.AddDbContext<ChatContext>(o => o.UseMySql(connString, MySqlServerVersion.LatestSupportedServerVersion));
-builder.Services.AddScoped<IRepoFactory, RepoFactory>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAppService, AppService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
-builder.Services.AddScoped<IServiceFactory, ServiceFactory>();
 //  Authentication (JWT) 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -156,14 +155,14 @@ app.MapControllers();
 #region ENDPOINTS
 app.MapHub<ChatHub>("api/hubs/chat");
 
-app.MapPost("api/app/create", async (IServiceFactory service, [FromBody] AppDTO app) =>
+app.MapPost("api/app/create", async (IAppService service, IUnitOfWork uow, [FromBody] AppDTO app) =>
 {
-    var result = await service.AppService.CreateAppAsync(app, "");
-    await service.db.SaveAsync();
+    var result = await service.CreateAppAsync(app, "");
+    await uow.SaveAsync();
     return Results.Ok(result);
 }).WithName("CreateApp").WithTags("App").WithOpenApi().RequireAuthorization();
 
-app.MapGet("api/group/getbyname", async (IRepoFactory factory, string name) =>
+app.MapGet("api/group/getbyname", async (IUnitOfWork factory, string name) =>
 {
     var result =  factory.Group.FindByCondition(g => g.Name.Equals(name, StringComparison.OrdinalIgnoreCase)).SingleOrDefault();
     await factory.SaveAsync();

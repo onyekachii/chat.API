@@ -9,9 +9,9 @@ namespace chat.API
     //[Authorize]
     public class ChatHub : Hub
     {
-        private readonly IRepoFactory _factory;
+        private readonly IUnitOfWork _factory;
          
-        public ChatHub(IRepoFactory factory)
+        public ChatHub(IUnitOfWork factory)
         {
             _factory = factory;
         }

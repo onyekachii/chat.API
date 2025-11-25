@@ -7,10 +7,10 @@ namespace chat.Service.Implementation
 {
     public class AppService : IAppService
     {
-        readonly IRepoFactory _repoFactory;
-        public AppService(IRepoFactory rf)
+        readonly IUnitOfWork UOW;
+        public AppService(IUnitOfWork rf)
         {
-            _repoFactory = rf;
+            UOW = rf;
         }
         public async Task<App> CreateAppAsync(AppDTO dto, string createdBy)
         {
@@ -18,7 +18,7 @@ namespace chat.Service.Implementation
             app.CreatedBy = createdBy;
             app.CreatedDate = DateTimeOffset.UtcNow;
 
-            return (await _repoFactory.App.CreateAsync(app)).Entity;
+            return (await UOW.App.CreateAsync(app)).Entity;
         }
     }
 }

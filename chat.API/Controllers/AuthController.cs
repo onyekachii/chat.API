@@ -50,10 +50,10 @@ namespace chat.API.Controllers
             var user = await _userService.GetUserAsync(model.username, appId, true);
             var tokens = await _authService.CreateTokensAsync(user!, (Role)model.role);
             await _uow.SaveAsync();
-            return Ok(new
+            return Ok(new 
             {
-                accessToken = tokens.accessToken,
-                refreshToken = RefreshTokenDTO.mapRefreshTokenToDto(tokens.refreshToken)
+                AccessToken = tokens.accessToken,
+                RefreshToken = RefreshTokenDTO.mapRefreshTokenToDto(tokens.refreshToken)
             });
         }
 

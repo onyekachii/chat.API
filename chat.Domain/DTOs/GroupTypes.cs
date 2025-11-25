@@ -23,5 +23,7 @@ namespace chat.Domain.DTOs
                 Description = dto.Description
             };
         };
+
+        public record JoinGroupRequestDTO(string UserName, long GroupID);
     }
 }

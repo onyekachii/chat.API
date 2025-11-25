@@ -30,5 +30,5 @@ public class Group : IBaseEntity
     public string? DeletedBy { get; set; }
     public bool SoftDeleted { get; set; } = false;
 
-    public virtual List<User>? Users { get; set; }
+    public virtual List<User>? Users { get; set; } = new List<User>();
 }

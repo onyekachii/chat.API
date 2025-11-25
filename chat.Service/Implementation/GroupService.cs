@@ -21,7 +21,14 @@ namespace chat.Service.Implementation
             group.CreatedDate = DateTimeOffset.UtcNow;
             group.CreatedBy = baseDto.CreatedBy;
             group.AppId = baseDto.AppID;
-            return (await _repoFactory.Group.CreateAsync(group)).Entity;
+            return (await UOW.Group.CreateAsync(group)).Entity;
         }
+
+        public async Task<Group?> GetGroupAsync(long Id, long appId, bool throwExpOnUserNotFound)
+        {
+            var group = UOW.Group.FindByCondition(g => g.ID == Id && g.AppId == appId && !g.SoftDeleted).FirstOrDefault();
+            return group is null && throwExpOnUserNotFound ? throw new Exception("Group does not exists") : group;
+        }
+
     }
 }

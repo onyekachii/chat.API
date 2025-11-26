@@ -16,8 +16,7 @@ namespace chat.Domain.DTOs
         };
     };
     
-    public record UserDTO([Required][MaxLength(50)] string Username, string DisplayName,
-        long CreatedBy, long UpdatedBy, long DeletedBy)
+    public record UserDTO([Required][MaxLength(50)] string Username, string DisplayName)
     {
         public static User mapDtoToUser(UserDTO dto, long AppID) => new User
         {
@@ -27,7 +26,7 @@ namespace chat.Domain.DTOs
         };
         public static UserDTO mapUserToDto(User u, long AppID) => new UserDTO(
             Username: u.Username,
-            DisplayName: u.DisplayName, 0,0,0   
+            DisplayName: u.DisplayName  
         );
     };
 

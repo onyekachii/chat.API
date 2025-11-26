@@ -5,10 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chat.Domain.Entities;
 
-[Index(nameof(ID), IsUnique = true)]
 public class Group : IBaseEntity
 {
     [Required]
+    [Key]
     public long ID { get; set; }
 
     [Required]

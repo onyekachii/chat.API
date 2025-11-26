@@ -15,7 +15,9 @@ namespace chat.Repo
         public DbSet<ApiKey> ApiKeys { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            modelBuilder.Entity<Group>()
+            .HasIndex(oi => new { oi.Name, oi.AppId }).IsUnique();
+
             modelBuilder.Entity<Group>()
                 .HasMany(g => g.Users)
                 .WithMany(u => u.Groups);

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using chat.Repo;
 
@@ -11,9 +12,11 @@ using chat.Repo;
 namespace chat.Repo.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    partial class ChatContextModelSnapshot : ModelSnapshot
+    [Migration("20251126155500_Old passed away")]
+    partial class Oldpassedaway
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,7 +176,7 @@ namespace chat.Repo.Migrations
 
                     b.HasIndex("AppId");
 
-                    b.HasIndex("Name", "AppId")
+                    b.HasIndex("ID")
                         .IsUnique();
 
                     b.ToTable("Groups");

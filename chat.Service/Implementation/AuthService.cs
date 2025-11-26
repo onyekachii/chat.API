@@ -17,12 +17,16 @@ namespace chat.Service.Implementation
         private IUnitOfWork _db;
         private readonly IOptionsMonitor<JwtConfig> _jwtSettings;
         private readonly IUserService _userService;
+        readonly IAppService _appService;
+    
 
-        public AuthService(IUnitOfWork db, IOptionsMonitor<JwtConfig> jwtSettings, IUserService userService)
+        public AuthService(IUnitOfWork db, IOptionsMonitor<JwtConfig> jwtSettings,
+            IUserService userService, IAppService appService)
         {
             _db = db;
             _jwtSettings = jwtSettings;
             _userService = userService;
+            _appService = appService;
         }
 
         public async Task<string> GetApiKeyAsync(long appId)
@@ -42,6 +46,7 @@ namespace chat.Service.Implementation
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.CurrentValue.Key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var user = await _userService.GetUserAsync(userModel.Username, userModel.AppId, true);
+            var app = await _appService.GetAppAsync(userModel.AppId, true);
             var claims = new List<Claim>
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user!.Username),
@@ -53,7 +58,7 @@ namespace chat.Service.Implementation
                 issuer: _jwtSettings.CurrentValue.Issuer,
                 audience: _jwtSettings.CurrentValue.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.CurrentValue.AccessTokenExpirationMinutes),
+                expires: app!.JwtAccessExpiryMinutes > 0 ? DateTime.UtcNow.AddMinutes(app.JwtAccessExpiryMinutes) : DateTime.UtcNow.AddMinutes(_jwtSettings.CurrentValue.AccessTokenExpirationMinutes),
                 signingCredentials: creds
             );
 

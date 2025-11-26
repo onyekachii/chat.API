@@ -17,6 +17,7 @@ public class App : IBaseEntity
     [MaxLength(50)]
     public string Name { get; set; }
 
+    public int JwtAccessExpiryMinutes { get; set; }
     public DateTimeOffset? CreatedDate { get; set; }
     public string? CreatedBy { get; set; }
     public DateTimeOffset? UpdatedDate { get; set; }

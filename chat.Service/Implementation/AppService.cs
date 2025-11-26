@@ -2,6 +2,7 @@
 using chat.Domain.Entities;
 using chat.Repo;
 using chat.Service.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace chat.Service.Implementation
 {
@@ -19,6 +20,13 @@ namespace chat.Service.Implementation
             app.CreatedDate = DateTimeOffset.UtcNow;
 
             return (await UOW.App.CreateAsync(app)).Entity;
+        }
+
+        public async Task<App?> GetAppAsync(long id, bool throwExpOnUserNotFound)
+        {
+            var app = await UOW.App.FindByCondition(app => app.ID == id && !app.SoftDeleted).SingleOrDefaultAsync();
+           return app is null && throwExpOnUserNotFound ? throw new UnauthorizedAccessException("App does not exists") : app;
+
         }
     }
 }

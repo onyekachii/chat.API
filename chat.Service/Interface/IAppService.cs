@@ -6,5 +6,6 @@ namespace chat.Service.Interface
     public interface IAppService
     {
         Task<App> CreateAppAsync(AppDTO dto, string createdBy);
+        Task<App?> GetAppAsync(long id, bool throwExpOnUserNotFound);
     }
 }

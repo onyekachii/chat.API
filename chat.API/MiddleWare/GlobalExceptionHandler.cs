@@ -1,5 +1,6 @@
 ﻿using chat.Domain.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Text.Json;
 
@@ -31,7 +32,12 @@ namespace chat.API.MiddleWare
         private Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             int statusCode;
-            string message;
+            string message = string.Empty;
+            if (ex.GetType() == typeof(DbUpdateException) && ex.InnerException is not null && ex.InnerException.Message.Contains("Duplicate entry"))
+                message = "Chat API: Record may already exist";
+            else if (ex.GetType() == typeof(DbUpdateException))
+                message = "Chat API: Database Operation Failed";
+
             switch (ex)
             {
                 case UnauthorizedAccessException:
@@ -42,6 +48,9 @@ namespace chat.API.MiddleWare
                     statusCode = (int)HttpStatusCode.NotFound;
                     message = "Chat API: Resource not found";
                     break;
+                case DbUpdateException:
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    break;
                 default:
                     statusCode = (int)HttpStatusCode.InternalServerError;
                     message = "Chat API: Internal Server Error";
@@ -49,7 +58,6 @@ namespace chat.API.MiddleWare
             }
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;
-
             var response = new ApiErrorResponse
             (
                 StatusCode : context.Response.StatusCode,

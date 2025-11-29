@@ -23,11 +23,11 @@ namespace chat.Repo.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CreatedBy = table.Column<long>(type: "bigint", nullable: true),
-                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedBy = table.Column<long>(type: "bigint", nullable: true),
-                    DeletedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DeletedBy = table.Column<long>(type: "bigint", nullable: true),
                     SoftDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
@@ -48,11 +48,11 @@ namespace chat.Repo.Migrations
                     AppId = table.Column<long>(type: "bigint", nullable: false),
                     Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CreatedBy = table.Column<long>(type: "bigint", nullable: true),
-                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedBy = table.Column<long>(type: "bigint", nullable: true),
-                    DeletedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DeletedBy = table.Column<long>(type: "bigint", nullable: true),
                     SoftDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
@@ -75,11 +75,11 @@ namespace chat.Repo.Migrations
                     Username = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     AppId = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CreatedBy = table.Column<long>(type: "bigint", nullable: true),
-                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedBy = table.Column<long>(type: "bigint", nullable: true),
-                    DeletedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DeletedBy = table.Column<long>(type: "bigint", nullable: true),
                     SoftDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
@@ -103,11 +103,11 @@ namespace chat.Repo.Migrations
                     GroupId = table.Column<long>(type: "bigint", nullable: true),
                     Text = table.Column<string>(type: "varchar(2000)", maxLength: 2000, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CreatedBy = table.Column<long>(type: "bigint", nullable: true),
-                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedBy = table.Column<long>(type: "bigint", nullable: true),
-                    DeletedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DeletedBy = table.Column<long>(type: "bigint", nullable: true),
                     SoftDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },

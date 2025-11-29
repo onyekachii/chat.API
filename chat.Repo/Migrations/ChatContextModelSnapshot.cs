@@ -49,13 +49,13 @@ namespace chat.Repo.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("DeletedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("DeletedDate")
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<bool>("Revoked")
@@ -67,7 +67,7 @@ namespace chat.Repo.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Key");
@@ -91,13 +91,13 @@ namespace chat.Repo.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("DeletedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("DeletedDate")
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<int>("JwtAccessExpiryMinutes")
@@ -114,7 +114,7 @@ namespace chat.Repo.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("ID");
@@ -142,17 +142,20 @@ namespace chat.Repo.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("DeletedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("DeletedDate")
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DisplayName")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Name")
@@ -166,7 +169,7 @@ namespace chat.Repo.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("ID");
@@ -188,13 +191,13 @@ namespace chat.Repo.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("DeletedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("DeletedDate")
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<long?>("GroupId")
@@ -211,7 +214,7 @@ namespace chat.Repo.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("ID");
@@ -238,16 +241,16 @@ namespace chat.Repo.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("DeletedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("DeletedDate")
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTimeOffset>("Expires")
+                    b.Property<DateTime>("Expires")
                         .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsRevoked")
@@ -272,7 +275,7 @@ namespace chat.Repo.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UserName")
@@ -300,13 +303,13 @@ namespace chat.Repo.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("DeletedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("DeletedDate")
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("DisplayName")
@@ -319,7 +322,7 @@ namespace chat.Repo.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Username");

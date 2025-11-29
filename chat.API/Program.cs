@@ -151,11 +151,11 @@ app.UseCors(variables.Get<Appsettings>()?.CorsPolicyName ?? string.Empty);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
+app.MapHub<ChatHub>("api/hubs/chat");
 
 
 #region ENDPOINTS
-app.MapHub<ChatHub>("api/hubs/chat");
+
 
 app.MapPost("api/app/create", async (IAppService service, IUnitOfWork uow, [FromBody] AppDTO app) =>
 {
@@ -163,13 +163,6 @@ app.MapPost("api/app/create", async (IAppService service, IUnitOfWork uow, [From
     await uow.SaveAsync();
     return Results.Ok(result);
 }).WithName("CreateApp").WithTags("App").WithOpenApi().RequireAuthorization();
-
-app.MapGet("api/group/getbyname", async (IUnitOfWork factory, string name) =>
-{
-    var result =  factory.Group.FindByCondition(g => g.Name.Equals(name, StringComparison.OrdinalIgnoreCase)).SingleOrDefault();
-    await factory.SaveAsync();
-    return Results.Ok(result);
-}).WithName("GetGroupByName").WithTags("Group").WithOpenApi();
 
 
 //app.MapGet("/api/group/{group}/messages", async (string group, ChatDbContext db, [FromQuery] int take = 50) =>

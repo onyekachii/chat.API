@@ -22,18 +22,18 @@ namespace chat.Domain.Entities
         public string UserName { get; set; }
         [ForeignKey(nameof(UserName))]
         public User User { get; set; }
-        public DateTimeOffset Expires { get; set; }
+        public DateTime Expires { get; set; }
         public bool IsUsed { get; set; }
         public bool IsRevoked { get; set; }
         public DateTime? RevokedDate { get; set; }
         public string? ReplacedByToken { get; set; }
-        public bool IsActive => !IsRevoked && !IsUsed && Expires > DateTimeOffset.UtcNow;
+        public bool IsActive => !IsRevoked && !IsUsed && Expires > DateTime.UtcNow;
 
-        public DateTimeOffset? CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
         public string? CreatedBy { get; set; }
-        public DateTimeOffset? UpdatedDate { get; set ; }
+        public DateTime? UpdatedDate { get; set ; }
         public string? UpdatedBy { get; set ; }
-        public DateTimeOffset? DeletedDate { get; set; }
+        public DateTime? DeletedDate { get; set; }
         public string? DeletedBy { get;set; }
         public bool SoftDeleted { get; set; }
     }

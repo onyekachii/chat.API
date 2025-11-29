@@ -17,7 +17,7 @@ namespace chat.Service.Implementation
         public async Task<User> CreateUserAsync(UserDTO dto, long appId)
         {
             var user = UserDTO.mapDtoToUser(dto, appId);
-            user.CreatedDate = DateTimeOffset.UtcNow;
+            user.CreatedDate = DateTime.UtcNow;
             return (await UOW.User.CreateAsync(user)).Entity;
         }
 

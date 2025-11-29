@@ -3,6 +3,7 @@ using chat.Domain.Entities;
 using chat.Repo;
 using chat.Service.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using static chat.Domain.DTOs.GroupTypes;
 
 namespace chat.Service.Implementation
@@ -18,10 +19,19 @@ namespace chat.Service.Implementation
         public async Task<Group> CreateGroupAsync(GroupPostRequestDTO dto, DTO baseDto)
         {
             var group = GroupPostRequestDTO.mapDtoToGroup(dto);
-            group.CreatedDate = DateTimeOffset.UtcNow;
+            group.CreatedDate = DateTime.UtcNow;
+            group.DisplayName = dto.DisplayName;
             group.CreatedBy = baseDto.CreatedBy;
             group.AppId = baseDto.AppID;
             return (await UOW.Group.CreateAsync(group)).Entity;
+        }
+
+        public async Task<IList<Group>?> GetAllGroups(DateTime? last, int pageSize, int page, long appID)
+        {
+            var groups = await UOW.Group.FindByCondition(g => !g.SoftDeleted && (last == null || g.CreatedDate > last) && appID == g.AppId)
+                .OrderByDescending(g => g.CreatedDate).Skip(pageSize * (page - 1)).Take(pageSize).ToListAsync();
+
+            return groups;
         }
 
         public async Task<Group?> GetGroupAsync(long Id, long appId, bool throwExpOnUserNotFound)

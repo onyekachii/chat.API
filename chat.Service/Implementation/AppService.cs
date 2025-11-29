@@ -17,7 +17,7 @@ namespace chat.Service.Implementation
         {
             var app = AppDTO.mapDtoToApp(dto);
             app.CreatedBy = createdBy;
-            app.CreatedDate = DateTimeOffset.UtcNow;
+            app.CreatedDate = DateTime.UtcNow;
 
             return (await UOW.App.CreateAsync(app)).Entity;
         }

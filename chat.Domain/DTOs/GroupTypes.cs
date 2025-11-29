@@ -5,7 +5,7 @@ namespace chat.Domain.DTOs
 {
     public class GroupTypes
     {
-        public record GroupResponseDTO(string Name, string Description, DateTimeOffset CreatedDate, string CreatedBy)
+        public record GroupResponseDTO(string Name, string Description, DateTime CreatedDate, string CreatedBy)
         {
             public static GroupResponseDTO mapGroupToDto(Group g) => new GroupResponseDTO(
                 Name: g.Name,
@@ -15,12 +15,13 @@ namespace chat.Domain.DTOs
             );
         };
 
-        public record GroupPostRequestDTO([MaxLength(50)] string Name, string Description)
+        public record GroupPostRequestDTO([MaxLength(50)] string Name, string DisplayName, string Description)
         {
             public static Group mapDtoToGroup(GroupPostRequestDTO dto) => new Group
             {
                 Name = dto.Name,
-                Description = dto.Description
+                Description = dto.Description,
+                DisplayName = dto.DisplayName,
             };
         };
 

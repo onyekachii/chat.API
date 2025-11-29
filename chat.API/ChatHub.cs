@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace chat.API
 {
-    //[Authorize]
+    [Authorize]
     public class ChatHub : Hub
     {
         private readonly IUnitOfWork _factory;
@@ -28,7 +28,7 @@ namespace chat.API
                 //CreatedBy = userId
             };
 
-            Clients.Group(groupId.ToString()).SendAsync("ReceiveMessage", new
+            Clients.Group(groupId.ToString()).SendAsync("GroupCreated", new
             {
                 GroupId = m.GroupId,
                 Text = m.Text,

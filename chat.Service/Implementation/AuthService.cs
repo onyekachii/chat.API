@@ -69,8 +69,8 @@ namespace chat.Service.Implementation
                 Token = GenerateRefreshTokenString(),
                 UserName = user.Username,
                 AppID = userModel.AppId,
-                Expires = DateTimeOffset.UtcNow.AddDays(_jwtSettings.CurrentValue.RefreshTokenExpirationDays),
-                CreatedDate = DateTimeOffset.UtcNow,
+                Expires = DateTime.UtcNow.AddDays(_jwtSettings.CurrentValue.RefreshTokenExpirationDays),
+                CreatedDate = DateTime.UtcNow,
             };
             return (accessToken, (await _db.RefreshToken.CreateAsync(refreshToken)).Entity);
         }

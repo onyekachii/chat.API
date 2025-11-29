@@ -30,17 +30,17 @@ namespace chat.Repo.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     UserName = table.Column<string>(type: "varchar(50)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Expires = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false),
+                    Expires = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     IsUsed = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     IsRevoked = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     RevokedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     ReplacedByToken = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CreatedBy = table.Column<long>(type: "bigint", nullable: true),
-                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdatedBy = table.Column<long>(type: "bigint", nullable: true),
-                    DeletedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DeletedBy = table.Column<long>(type: "bigint", nullable: true),
                     SoftDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },

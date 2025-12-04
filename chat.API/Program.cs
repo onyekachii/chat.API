@@ -94,6 +94,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             OnMessageReceived = context =>
             {
                 System.Diagnostics.Debug.WriteLine("TOKEN RECEIVED: " + context.Token);
+                var accessToken = context.Request.Query["access_token"];
+
+                // If request is for the hub
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) &&
+                    path.StartsWithSegments("/api/hubs/chat"))
+                {
+                    context.Token = accessToken;
+                }
+
                 return Task.CompletedTask;
             },
 
@@ -102,26 +112,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 System.Diagnostics.Debug.WriteLine("TOKEN VALIDATED OK");
                 return Task.CompletedTask;
             }
-        };
-        //// allow token in querystring for WebSockets/negotiate
-        //var originalOnMessage = options.Events.OnMessageReceived;
-        //options.Events = new JwtBearerEvents
-        //{
-        //    OnMessageReceived = async context =>
-        //    {
-        //        // first run original
-        //        if (originalOnMessage != null) await originalOnMessage(context);
-
-        //        var accessToken = context.Request.Query["access_token"].FirstOrDefault();
-        //        var path = context.HttpContext.Request.Path;
-
-        //        if (!string.IsNullOrEmpty(accessToken) &&
-        //            path.StartsWithSegments("api/hubs/chat"))
-        //        {
-        //            context.Token = accessToken;
-        //        }
-        //    }
-        //};
+        };           
     })
     .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthHandler>(
         ApiKeyAuthHandler.SchemeName, o => { });

@@ -3,6 +3,7 @@ using chat.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using static chat.Domain.DTOs.GroupTypes;
 
@@ -17,13 +18,15 @@ namespace chat.API.Controllers
         private readonly IGroupService _groupService;
         private readonly IUserService _userService;
         private readonly IGroupUserService _groupUserService;
-        public GroupController(IUnitOfWork uow, IGroupService groupService,
+        private readonly IHubContext<ChatHub> _hub;
+        public GroupController(IUnitOfWork uow, IGroupService groupService, IHubContext<ChatHub> hub,
             IUserService userService, IGroupUserService groupUserService)
         {
             _uow = uow;
             _groupService = groupService;
             _userService = userService;
             _groupUserService = groupUserService;
+            _hub = hub;
         }
 
         [HttpPost("create")]
@@ -31,7 +34,9 @@ namespace chat.API.Controllers
         {
             var result = await _groupService.CreateGroupAsync(dto, UserInfo!);            
             await _uow.SaveAsync();
-            return CreatedAtAction(nameof(CreateGroup), new { result = GroupResponseDTO.mapGroupToDto(result) });
+            var responsePayload = GroupResponseDTO.mapGroupToDto(result);
+            _hub.Clients.Group($"Group-{dto.MethodIdentifier}").SendAsync($"GroupCreated-{dto.MethodIdentifier}", responsePayload);
+            return CreatedAtAction(nameof(CreateGroup), new { result = responsePayload });
         }
 
         [HttpGet("getall")]

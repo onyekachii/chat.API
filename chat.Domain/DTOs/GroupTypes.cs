@@ -15,7 +15,7 @@ namespace chat.Domain.DTOs
             );
         };
 
-        public record GroupPostRequestDTO([MaxLength(50)] string Name, string DisplayName, string Description)
+        public record GroupPostRequestDTO([MaxLength(50)] string Name, string DisplayName, string Description, [Required] string MethodIdentifier)
         {
             public static Group mapDtoToGroup(GroupPostRequestDTO dto) => new Group
             {

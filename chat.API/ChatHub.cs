@@ -41,7 +41,6 @@ namespace chat.API
 
         public override async Task OnConnectedAsync()
         {
-            // Optionally set UserIdentifier (if using sub claim, configure mapping)
             await base.OnConnectedAsync();
         }
 

@@ -32,10 +32,11 @@ namespace chat.API.Controllers
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromHeader(Name = "app-id")] long appId,
-            [FromBody] UserDTO model) // future reminder, if endpoint will take in data from frontend client, appid should be retreived some other way. AppId must never been known by client side (for security)  
+            [FromBody] UserDTO model) 
         {
             var existingUser = await _userService.GetUserAsync(model.Username, appId, false);
-            if (existingUser != null) return Conflict("User already exists");
+            if (existingUser != null) 
+                return Conflict("User already exists");
 
             var newUser = UserDTO.mapUserToDto( await _userService.CreateUserAsync(model, appId), appId );
             await _uow.SaveAsync();

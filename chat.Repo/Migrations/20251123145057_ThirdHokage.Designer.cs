@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using chat.Repo;
 
@@ -11,9 +12,11 @@ using chat.Repo;
 namespace chat.Repo.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    partial class ChatContextModelSnapshot : ModelSnapshot
+    [Migration("20251123145057_ThirdHokage")]
+    partial class ThirdHokage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,14 +49,14 @@ namespace chat.Repo.Migrations
                     b.Property<long>("AppID")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("CreatedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("DeletedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime(6)");
@@ -64,8 +67,8 @@ namespace chat.Repo.Migrations
                     b.Property<bool>("SoftDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("UpdatedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
@@ -88,20 +91,17 @@ namespace chat.Repo.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("ID"));
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("CreatedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("DeletedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<int>("JwtAccessExpiryMinutes")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -111,8 +111,8 @@ namespace chat.Repo.Migrations
                     b.Property<bool>("SoftDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("UpdatedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
@@ -139,23 +139,20 @@ namespace chat.Repo.Migrations
                     b.Property<long>("AppId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("CreatedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("DeletedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("DisplayName")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Name")
@@ -166,8 +163,8 @@ namespace chat.Repo.Migrations
                     b.Property<bool>("SoftDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("UpdatedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
@@ -176,7 +173,7 @@ namespace chat.Repo.Migrations
 
                     b.HasIndex("AppId");
 
-                    b.HasIndex("Name", "AppId")
+                    b.HasIndex("ID")
                         .IsUnique();
 
                     b.ToTable("Groups");
@@ -188,14 +185,14 @@ namespace chat.Repo.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("CreatedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("DeletedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime(6)");
@@ -211,8 +208,8 @@ namespace chat.Repo.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("varchar(2000)");
 
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("UpdatedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
@@ -238,14 +235,14 @@ namespace chat.Repo.Migrations
                     b.Property<long>("AppID")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("CreatedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("DeletedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime(6)");
@@ -272,8 +269,8 @@ namespace chat.Repo.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("UpdatedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
@@ -300,14 +297,14 @@ namespace chat.Repo.Migrations
                     b.Property<long>("AppId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("CreatedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("DeletedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime(6)");
@@ -319,8 +316,8 @@ namespace chat.Repo.Migrations
                     b.Property<bool>("SoftDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("longtext");
+                    b.Property<long?>("UpdatedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime(6)");

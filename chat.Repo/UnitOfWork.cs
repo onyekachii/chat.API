@@ -3,35 +3,38 @@ using chat.Repo.Interfaces;
 
 namespace chat.Repo
 {
-    public class RepoFactory : IRepoFactory
+    public class UnitOfWork : IUnitOfWork
     {
-        private ChatContext _chatContext;
+        public ChatContext _chatContext;
         private IAppRepo _appRepo;
         private IUserRepo _userRepo;
         private IGroupRepo _groupRepo;
         private IMessageRepo _messageRepo;
         private IRefreshTokenRepo _refreshTokenRepo;
         private IApiKeyRepo _apiKeyRepo;
-        public RepoFactory(ChatContext chatContext)
+        public UnitOfWork(ChatContext chatContext)
         {
-            _chatContext = chatContext;
+            _chatContext = chatContext;            
         }
 
-        public IAppRepo App {
+        public IAppRepo App
+        {
             get
             {
-                return _appRepo ??= new AppRepo(_chatContext);                
+                return _appRepo ??= new AppRepo(_chatContext);
             }
         }
 
-        public IUserRepo User {
+        public IUserRepo User
+        {
             get
             {
                 return _userRepo ??= new UserRepo(_chatContext);
             }
         }
 
-        public IGroupRepo Group {
+        public IGroupRepo Group
+        {
             get
             {
                 return _groupRepo ??= new GroupRepo(_chatContext);
@@ -61,6 +64,7 @@ namespace chat.Repo
                 return _apiKeyRepo ??= new ApiKeyRepo(_chatContext);
             }
         }
+
         public Task SaveAsync() => _chatContext.SaveChangesAsync();
     }
 }

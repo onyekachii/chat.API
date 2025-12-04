@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using chat.Repo;
 
@@ -11,9 +12,11 @@ using chat.Repo;
 namespace chat.Repo.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    partial class ChatContextModelSnapshot : ModelSnapshot
+    [Migration("20251125103930_5-star")]
+    partial class _5star
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,9 +103,6 @@ namespace chat.Repo.Migrations
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("JwtAccessExpiryMinutes")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -155,9 +155,6 @@ namespace chat.Repo.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("DisplayName")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -176,10 +173,25 @@ namespace chat.Repo.Migrations
 
                     b.HasIndex("AppId");
 
-                    b.HasIndex("Name", "AppId")
+                    b.HasIndex("ID")
                         .IsUnique();
 
                     b.ToTable("Groups");
+                });
+
+            modelBuilder.Entity("chat.Domain.Entities.GroupUser", b =>
+                {
+                    b.Property<string>("UsersUsername")
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<long>("GroupsID")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("UsersUsername", "GroupsID");
+
+                    b.HasIndex("GroupsID");
+
+                    b.ToTable("GroupUsers");
                 });
 
             modelBuilder.Entity("chat.Domain.Entities.Message", b =>
@@ -370,6 +382,25 @@ namespace chat.Repo.Migrations
                         .IsRequired();
 
                     b.Navigation("App");
+                });
+
+            modelBuilder.Entity("chat.Domain.Entities.GroupUser", b =>
+                {
+                    b.HasOne("chat.Domain.Entities.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("chat.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UsersUsername")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("chat.Domain.Entities.Message", b =>

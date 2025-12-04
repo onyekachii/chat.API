@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace chat.API
 {
-    //[Authorize]
+    [Authorize]
     public class ChatHub : Hub
     {
-        private readonly IRepoFactory _factory;
+        private readonly IUnitOfWork _factory;
          
-        public ChatHub(IRepoFactory factory)
+        public ChatHub(IUnitOfWork factory)
         {
             _factory = factory;
         }
@@ -28,7 +28,7 @@ namespace chat.API
                 //CreatedBy = userId
             };
 
-            Clients.Group(groupId.ToString()).SendAsync("ReceiveMessage", new
+            Clients.Group(groupId.ToString()).SendAsync("GroupCreated", new
             {
                 GroupId = m.GroupId,
                 Text = m.Text,
@@ -41,7 +41,6 @@ namespace chat.API
 
         public override async Task OnConnectedAsync()
         {
-            // Optionally set UserIdentifier (if using sub claim, configure mapping)
             await base.OnConnectedAsync();
         }
 

@@ -12,10 +12,15 @@ namespace chat.Repo
         public DbSet<User> Users { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<ApiKey> ApiKeys { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-            // Fluent API configurations here if needed
+            modelBuilder.Entity<Group>()
+            .HasIndex(oi => new { oi.Name, oi.AppId }).IsUnique();
+
+            modelBuilder.Entity<Group>()
+                .HasMany(g => g.Users)
+                .WithMany(u => u.Groups);
         }
     }
 }

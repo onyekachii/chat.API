@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace chat.Repo
 {
-    public interface IRepoFactory
+    public interface IUnitOfWork
     {
         IAppRepo App { get; }
         IUserRepo User { get; }

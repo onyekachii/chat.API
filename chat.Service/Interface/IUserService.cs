@@ -12,6 +12,6 @@ namespace chat.Service.Interface
     {
         Task<User> CreateUserAsync(UserDTO dto, long appId);
 
-        Task<User?> GetUserAsync(string username, long appId);
+        Task<User?> GetUserAsync(string username, long appId, bool throwExpOnUserNotFound);
     }
 }

@@ -10,8 +10,10 @@ using chat.Service.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,7 +24,33 @@ var connString = builder.Configuration.GetConnectionString("sqlConnection") ?? t
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{   
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please insert JWT token into the field. Example: {token}",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
 // setup appsettings and inject as service.. IOptions<T> == singleton & immutable; IOptionsSnapshot<T> == scoped; IOptionsMonitor == singleton & mutable
@@ -31,10 +59,12 @@ builder.Services.Configure<JwtConfig>(jwt);
 // cors
 builder.Services.ConfigureCors(variables.Get<Appsettings>() ?? throw new InvalidOperationException());
 builder.Services.AddDbContext<ChatContext>(o => o.UseMySql(connString, MySqlServerVersion.LatestSupportedServerVersion));
-builder.Services.AddScoped<IRepoFactory, RepoFactory>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IServiceFactory, ServiceFactory>();
+builder.Services.AddScoped<IAppService, AppService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<IGroupUserService, GroupUserService>();
 //  Authentication (JWT) 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -51,35 +81,48 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Get<JwtConfig>().Key)),
             ClockSkew = TimeSpan.Zero
         };
-                
-        //// allow token in querystring for WebSockets/negotiate
-        //var originalOnMessage = options.Events.OnMessageReceived;
-        //options.Events = new JwtBearerEvents
-        //{
-        //    OnMessageReceived = async context =>
-        //    {
-        //        // first run original
-        //        if (originalOnMessage != null) await originalOnMessage(context);
 
-        //        var accessToken = context.Request.Query["access_token"].FirstOrDefault();
-        //        var path = context.HttpContext.Request.Path;
 
-        //        if (!string.IsNullOrEmpty(accessToken) &&
-        //            path.StartsWithSegments("api/hubs/chat"))
-        //        {
-        //            context.Token = accessToken;
-        //        }
-        //    }
-        //};
-    });
-// ApiKeyAuth
-builder.Services.AddAuthentication(ApiKeyAuthHandler.SchemeName)
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                System.Diagnostics.Debug.WriteLine("AUTH FAILED: " + context.Exception.Message);
+                return Task.CompletedTask;
+            },
+
+            OnMessageReceived = context =>
+            {
+                System.Diagnostics.Debug.WriteLine("TOKEN RECEIVED: " + context.Token);
+                var accessToken = context.Request.Query["access_token"];
+
+                // If request is for the hub
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) &&
+                    path.StartsWithSegments("/api/hubs/chat"))
+                {
+                    context.Token = accessToken;
+                }
+
+                return Task.CompletedTask;
+            },
+
+            OnTokenValidated = context =>
+            {
+                System.Diagnostics.Debug.WriteLine("TOKEN VALIDATED OK");
+                return Task.CompletedTask;
+            }
+        };           
+    })
     .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthHandler>(
         ApiKeyAuthHandler.SchemeName, o => { });
+    
 
 builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
+app.UseMiddleware<GlobalExceptionHandler>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -99,32 +142,18 @@ app.UseCors(variables.Get<Appsettings>()?.CorsPolicyName ?? string.Empty);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
+app.MapHub<ChatHub>("api/hubs/chat");
 
 
 #region ENDPOINTS
-app.MapHub<ChatHub>("api/hubs/chat");
 
-app.MapPost("api/app/create", async (IRepoFactory factory, AppDTO app) =>
-{
-    var result = await factory.App.CreateAsync(AppDTO.mapDtoToApp(app));
-    await factory.SaveAsync();
-    return Results.Ok(result.Entity);
-}).WithName("CreateApp").WithTags("App").WithOpenApi();
 
-app.MapPost("api/group/create", async (IRepoFactory factory, GroupDTO group) =>
+app.MapPost("api/app/create", async (IAppService service, IUnitOfWork uow, [FromBody] AppDTO app) =>
 {
-    var result = await factory.Group.CreateAsync(GroupDTO.mapDtoToGroup(group));
-    await factory.SaveAsync();
-    return Results.Ok(result.Entity);
-}).WithName("CreateGroup").WithTags("Group").WithOpenApi();
-
-app.MapGet("api/group/getbyname", async (IRepoFactory factory, string name) =>
-{
-    var result =  factory.Group.FindByCondition(g => g.Name.Equals(name, StringComparison.OrdinalIgnoreCase)).SingleOrDefault();
-    await factory.SaveAsync();
+    var result = await service.CreateAppAsync(app, "");
+    await uow.SaveAsync();
     return Results.Ok(result);
-}).WithName("GetGroupByName").WithTags("Group").WithOpenApi();
+}).WithName("CreateApp").WithTags("App").WithOpenApi().RequireAuthorization();
 
 
 //app.MapGet("/api/group/{group}/messages", async (string group, ChatDbContext db, [FromQuery] int take = 50) =>
@@ -138,7 +167,6 @@ app.MapGet("api/group/getbyname", async (IRepoFactory factory, string name) =>
 //    return Results.Ok(msgs);
 //}).RequireAuthorization();
 
-// migration
 // delete group
 // update group
 // test project

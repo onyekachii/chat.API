@@ -18,13 +18,13 @@ public class User : IBaseEntity
     public long AppId { get; set; }
     public App App { get; set; }
 
-    public DateTimeOffset? CreatedDate { get; set; }
-    public long? CreatedBy { get; set; }
-    public DateTimeOffset? UpdatedDate { get; set; }
-    public long? UpdatedBy { get; set; }
-    public DateTimeOffset? DeletedDate { get; set; }
-    public long? DeletedBy { get; set; }
+    public DateTime? CreatedDate { get; set; }
+    public string? CreatedBy { get; set; }
+    public DateTime? UpdatedDate { get; set; }
+    public string? UpdatedBy { get; set; }
+    public DateTime? DeletedDate { get; set; }
+    public string? DeletedBy { get; set; }
     public bool SoftDeleted { get; set; } = false;
 
-    public virtual List<Group>? Groups { get; set; }
+    public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
 }

@@ -23,12 +23,12 @@ namespace chat.Domain.Entities
         [MaxLength(2000)]
         public string Text { get; set; } = default;
 
-        public DateTimeOffset? CreatedDate { get; set; } = DateTimeOffset.UtcNow;
-        public long? CreatedBy { get; set; }
-        public DateTimeOffset? UpdatedDate { get; set; }
-        public long? UpdatedBy { get; set; }
-        public DateTimeOffset? DeletedDate { get; set; }
-        public long? DeletedBy { get; set; }
+        public DateTime? CreatedDate { get; set; } = DateTime.UtcNow;
+        public string? CreatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string? UpdatedBy { get; set; }
+        public DateTime? DeletedDate { get; set; }
+        public string? DeletedBy { get; set; }
         public bool SoftDeleted { get; set; } = false;
     }
 }

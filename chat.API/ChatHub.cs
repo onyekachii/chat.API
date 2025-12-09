@@ -1,42 +1,54 @@
 ﻿using chat.Domain.DTOs;
 using chat.Domain.Entities;
 using chat.Repo;
+using chat.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace chat.API
 {
     [Authorize]
     public class ChatHub : Hub
     {
-        private readonly IUnitOfWork _factory;
-         
-        public ChatHub(IUnitOfWork factory)
+        private readonly IUnitOfWork _uow;
+        private readonly IMessageService _messageService;
+        private readonly IGroupService _groupService;
+
+        public ChatHub(IUnitOfWork uow, IGroupService groupService, IMessageService messageService)
         {
-            _factory = factory;
+            _uow = uow;
+            _groupService = groupService;
+            _messageService = messageService;
         }
 
-        public async Task SendMessageToGroup(long groupId, string message)
+        public async Task SendMessageToGroup(string groupName, string message, string methodIdentifier)
         {
-            var userId = Context.UserIdentifier ?? Context.ConnectionId;
-            var userName = Context.User?.Identity?.Name ?? "anon";
+            //var userId = Context.UserIdentifier ?? Context.ConnectionId;
+            //var userName = Context.User?.Identity?.Name ?? "anon";
+            long.TryParse(Context.User?.FindFirst("AppId")?.Value, out var appId);
+            var group = await _groupService.GetGroupByNameAsync(groupName, appId, true);
+            var username = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? throw new UnauthorizedAccessException();
 
             var m = new Message
             {
-                GroupId = groupId > 0 ? groupId : null,
+                GroupId = group!.ID,
                 Text = message,
-                //CreatedBy = userId
+                CreatedBy = username,
+                CreatedDate = DateTime.UtcNow
             };
 
-            Clients.Group(groupId.ToString()).SendAsync("GroupCreated", new
+            Clients.Group($"Message-{methodIdentifier}").SendAsync($"Message-{methodIdentifier}", new
             {
-                GroupId = m.GroupId,
-                Text = m.Text,
+                GroupName = groupName,
+                CreatedBy = username,
+                Text = message,
+                CreatedDate = m.CreatedDate
             });
 
-            
-            await _factory.Message.CreateAsync(m);
-            await _factory.SaveAsync();            
+            await _uow.Message.CreateAsync(m);
+            await _uow.SaveAsync();            
         }
 
         public override async Task OnConnectedAsync()

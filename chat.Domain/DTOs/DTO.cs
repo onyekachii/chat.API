@@ -5,6 +5,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chat.Domain.DTOs
 {
+    public record MessageResponseDTO(string GroupName, string CreatedBy, string text, DateTime CreatedDate)
+    {
+        public static MessageResponseDTO mapMessageToDto(Message m) => new MessageResponseDTO(
+            GroupName:  m.Group.Name,
+            CreatedBy:  m.CreatedBy,
+            text: m.Text,
+            CreatedDate: m.CreatedDate.Value
+        );
+    }
     
     public record DTO(string CreatedBy, long AppID);
 

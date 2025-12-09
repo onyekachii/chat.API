@@ -8,6 +8,7 @@ namespace chat.Service.Interface
     {
         Task<Group> CreateGroupAsync(GroupPostRequestDTO dto, DTO baseDTO);
         Task<Group?> GetGroupAsync(long Id, long appId, bool throwExpOnUserNotFound);
+        Task<Group?> GetGroupByNameAsync(string name, long appId, bool throwExpOnUserNotFound);
         Task<IList<Group>?> GetAllGroups(DateTime? last, int pageSize, int page, long appID);
     }
 }

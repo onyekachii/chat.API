@@ -65,6 +65,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAppService, AppService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IGroupUserService, GroupUserService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
 //  Authentication (JWT) 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -154,18 +155,6 @@ app.MapPost("api/app/create", async (IAppService service, IUnitOfWork uow, [From
     await uow.SaveAsync();
     return Results.Ok(result);
 }).WithName("CreateApp").WithTags("App").WithOpenApi().RequireAuthorization();
-
-
-//app.MapGet("/api/group/{group}/messages", async (string group, ChatDbContext db, [FromQuery] int take = 50) =>
-//{
-//    var msgs = await db.Messages
-//        .Where(m => m.Room == room)
-//        .OrderByDescending(m => m.SentAt)
-//        .Take(take)
-//        .OrderBy(m => m.SentAt) // return oldest->newest
-//        .ToListAsync();
-//    return Results.Ok(msgs);
-//}).RequireAuthorization();
 
 // delete group
 // update group

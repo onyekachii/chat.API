@@ -5,13 +5,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace chat.Domain.DTOs
 {
-    public record MessageResponseDTO(string GroupName, string CreatedBy, string text, DateTime CreatedDate)
+    public record MessageResponseDTO(string GroupName, string CreatedBy, string text, DateTime CreatedDate, string DisplayName)
     {
         public static MessageResponseDTO mapMessageToDto(Message m) => new MessageResponseDTO(
             GroupName:  m.Group.Name,
             CreatedBy:  m.CreatedBy,
             text: m.Text,
-            CreatedDate: m.CreatedDate.Value
+            CreatedDate: m.CreatedDate.Value,
+            DisplayName: m.DisplayName ?? m.CreatedBy
         );
     }
     

@@ -1,5 +1,6 @@
 ﻿using chat.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace chat.Domain.DTOs
 {
@@ -16,12 +17,12 @@ namespace chat.Domain.DTOs
             );
         };
 
-        public record GroupPostRequestDTO([MaxLength(50)] string Name, string DisplayName, string Description, [Required] string MethodIdentifier)
+        public record GroupPostRequestDTO([MaxLength(50)] string Name, string DisplayName, string? Description, [Required] string MethodIdentifier)
         {
             public static Group mapDtoToGroup(GroupPostRequestDTO dto) => new Group
             {
                 Name = dto.Name,
-                Description = dto.Description,
+                Description = dto.Description ?? string.Empty,
                 DisplayName = dto.DisplayName,
             };
         };

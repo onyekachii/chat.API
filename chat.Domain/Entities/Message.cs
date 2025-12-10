@@ -23,6 +23,8 @@ namespace chat.Domain.Entities
         [MaxLength(2000)]
         public string Text { get; set; } = default;
 
+        public string DisplayName { get; set; }
+
         public DateTime? CreatedDate { get; set; } = DateTime.UtcNow;
         public string? CreatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }

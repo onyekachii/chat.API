@@ -23,7 +23,7 @@ namespace chat.API
             _messageService = messageService;
         }
 
-        public async Task SendMessageToGroup(string groupName, string message, string methodIdentifier)
+        public async Task SendMessageToGroup(string groupName, string displayName, string message, string methodIdentifier)
         {
             //var userId = Context.UserIdentifier ?? Context.ConnectionId;
             //var userName = Context.User?.Identity?.Name ?? "anon";
@@ -36,7 +36,8 @@ namespace chat.API
                 GroupId = group!.ID,
                 Text = message,
                 CreatedBy = username,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow,
+                DisplayName = displayName
             };
 
             Clients.Group($"Message-{methodIdentifier}").SendAsync($"Message-{methodIdentifier}", new
@@ -44,6 +45,7 @@ namespace chat.API
                 GroupName = groupName,
                 CreatedBy = username,
                 Text = message,
+                DisplayName = displayName,
                 CreatedDate = m.CreatedDate
             });
 

@@ -27,7 +27,7 @@ namespace chat.API.Controllers
         public async Task<IActionResult> GetMessagesByGroup(string groupName, DateTime? lastCreated = null)
         {
             var res = await _messageService.GetMessagesByName(lastCreated, groupName, UserInfo!.AppID);
-            if (res.Count > 0)
+            if (res?.Count > 0)
             {
                 var result = await Task.WhenAll(res.Select(r => Task.Run(() => MessageResponseDTO.mapMessageToDto(r))));
                 return Ok(result);
